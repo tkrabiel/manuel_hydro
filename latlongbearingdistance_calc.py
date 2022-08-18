@@ -3,9 +3,8 @@ import numpy
 '''This set of functions is used to do basic survey math
 Find the Radius of earth at you LAT acording to WGS84
 Find the second set of LAT LONG given a first lat long, distance, Radius, Bearing
-Find
-'''
 
+'''
 
 #finds the radius of the earth at the lat given I left the radius DEF
 #as a long string so I can debug and see what the outputs are at each step
@@ -40,9 +39,9 @@ def secondcord(lat1,lon1, radius, distance,brng): #must be in radians
 # math for calculating the bearing between a lat long to lat long
 #return a float
 def true_bearing(longa,lata,longb,latb):
-    Ldiff = abs(longa - longb)
+    ldiff = abs(longa - longb)
     x = math.cos(latb)*math.sin(Ldiff)
-    y = math.cos(lata)*math.sin(latb)-math.sin(lata)*math.cos(latb)*math.cos(Ldiff)
+    y = math.cos(lata)*math.sin(latb)-math.sin(lata)*math.cos(latb)*math.cos(ldiff)
     #x = math.cos(math.radians(latb) * math.sin(Ldiff))
     #y = math.cos(math.radians(lata) * math.sin(math.radians(latb) - math.sin(math.radians(lata) * math.cos(math.radians(latb) * math.cos(Ldiff)))))
     brg = math.atan2(x,y) #returns radians
@@ -61,9 +60,10 @@ def distance(lat1,lon1, lat2, lon2):
     # calculate the result in KM!!!
     return float(c * r)
 
+
 def angle_bearing(angle,direction):
     if direction == "west" or "south":
-        if  angle>= -90 or anlge <= 90 :
+        if angle>= -90 or anlge <= 90 :
             x =  -1
         elif angle<= -90 or anlge >= 90:
             x = +1
@@ -79,6 +79,22 @@ def bearing_corrector(bearing):
     elif bearing < 180:
         x = bearing
     return x
+# law of sins given c  and all anglse a/sinA = b/sinB
+# a = c·sin(A)/sin(C)
+# b = c·sin(B)/sin(C)   sinde AQ = side AB * sin(A_ABQ)/Sin(A_AQB)
+#Imagine a Triangle pointed down \/
+# Left-Center-Right
+# Point:A , C, B A\C/B
+# Angles: A_CAB, A_ABC, A_BCA A_CAB\A_ABC/A_BCA
+# MUST HAVE A_ABC and A_CAB  Equal
+def law_of_sins_hydro(distance_AB,RA_LA):
+    #fidning point C and Angle A_BCA
+    A_ABC = 90 - RA_LA
+    A_BCA = 180 - (2 *A_ABC) #only works if ABC and CAB are Equal
+    degree_A_ABC = math.degrees(A_ABC)
+    degree_A_BCA = math.degrees(A_BCA)
+    Dis_BC = distance_AB * math.sin(math.radians(A_ABC)) / math.sin(math.radians(A_BCA))
+    return Dis_BC
 
 
 
